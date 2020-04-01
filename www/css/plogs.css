@@ -1,0 +1,751 @@
+.dropbox-saver{
+    z-index: 1000;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+}
+
+#box {
+    height: 100%;
+}
+
+#box0 {
+    float: left;
+    width: 40%;
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
+    padding: 0em;
+}
+
+#box1 {
+    float: left;
+    width: 58%;
+    height: 100%;
+    /* overflow: auto; */
+    box-sizing: border-box;
+    /* margin-top: -4em; */
+}
+
+#box10 {
+    /* height: 87%; */
+    width: 100%;
+    float: left;
+    padding: 0.5em;
+}
+
+#box11 {
+    /* height: 13%; */
+    width: 100%;
+    float: left;
+    overflow: hidden;
+}
+
+.scope-radio-group{
+    text-align:center;
+}
+
+/* minor adjustments to rs-widget*/
+#remotestorage-widget{
+    position: absolute;
+    right: 0px;
+}
+
+.rs-widget{
+    margin-top: 0px!important;
+    max-width: 380px!important;
+}
+
+.rs-closed{
+    max-width: 56px!important;
+}
+
+.rs-button-small {
+    padding: 0.3em 0.6em !important;
+}
+
+#centralpart {
+    padding: 6.32em 0em 8em 0em;
+}
+
+.searchbox {
+    padding-left: 1em;
+    padding-top: 0em !important;
+    width: 84%;
+}
+
+/* #myFilter {
+    background-image: url('/res/icon/searchicon.png');
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+} */
+
+div.editable {
+    width: 100%;
+    /* height: 500px; */
+    /* border: 1px solid #ccc; */
+    padding: 5px;
+}
+
+div.dueinput {
+    width: 70%;
+    /* height: 500px; */
+    /* border: 1px solid #ccc; */
+    padding: 5px;
+    position: fixed;
+}
+
+#idue{
+    height: 2.2em;
+    /* font-size: 12pt; */
+}
+
+#itit{
+    height: 2.5em;
+    /* font-size: 12pt; */
+}
+
+#itext{
+    overflow: auto;
+    display:inline-block; /* prevents chrome to insert <div>s and <p>s */
+    /* white-space: pre-wrap; */
+    /* font-size: 12pt; */
+}
+
+#itext p{
+    margin: 0px !important;
+}
+
+input[type=radio] {
+    position: absolute;
+    visibility: hidden;
+    display: none;
+}
+
+label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+label.lbcheck{
+    padding-left: 7px;
+}
+
+/* .scope {
+    padding: 7px 20px 2px 20px;
+    border-width: medium;
+    border-bottom-style: solid;
+} */
+
+.bottombar {
+    padding: 7px 8px 5px 8px;
+    border-width: thick;
+    border-bottom-style: solid;
+}
+
+.bottombaraction{
+    width: 27px;
+    height: 33px;
+    border-bottom: lightblue;
+    border-bottom-style: solid;
+    border-bottom-width: thick;
+}
+
+
+#getall{
+    width: 15%;
+    color: #fff!important;
+    background-color: #000!important;
+}
+
+.menubar{
+    width: 16%;
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+.scopeselectmenu{
+    left: 16%;
+}
+
+.tagselectmenu{
+    left: 32%;
+}
+
+.personselectmenu{
+    left: 48%;
+}
+
+.dueselectmenu{
+    left: 56%;
+}
+
+
+input[name='getscope']+label {
+    /* if unchecked */
+    color: #ddd;
+    background: #aaa;
+}
+
+input[name='setscope']+label {
+    /* if unchecked */
+    color: #ddd;
+    background: #aaa;
+}
+
+input[name='getscope']:checked+label {
+    color: white;
+    background: black;
+}
+
+input[name='setscope']:checked+label {
+    color: white;
+    background: black;
+}
+
+input[name='setaction']:checked+label {
+    color: black;
+    /* background: #aaa; */
+}
+
+.lb-setaction {
+    position: relative;
+    top: -8px;
+}
+
+p {
+    margin-bottom: 0em;
+    margin-top: 0.3em;
+}
+
+.icon {
+    color: #ddd;
+    font-size: 2em;
+    position: relative;
+    top: 9px;
+}
+
+.icon-svg {
+    /* all svg icons */
+    width: 2.2em;
+    height: 2.3em;
+    position: relative;
+}
+
+.select-icon-svg {
+    /* svg icons in select menu */
+    width: 2.2em;
+    height: 2.4em;
+    position: relative;
+    vertical-align: middle;
+}
+
+.w3-dropdown-click {
+    display: inherit;
+}
+
+#duesetelements{
+    position: relative;
+    top: -160px;
+    right: -160px;
+    width: 30%;
+}
+
+#dueclear {
+    float: right;
+    position: relative;
+    top: -15px;
+}
+
+.w3-bar{
+    margin-top: 0.5em;
+    margin-left: 1.5em;
+}
+
+#mySidebar{
+    display:none; 
+    z-index:10; 
+    width:250px;
+}
+
+.label-small{
+    font-size: 0.7em;
+}
+
+/* #messageboxlist{
+    width: 96%;
+    margin-left: 2%;
+}
+ */
+.actionselecticonsmenu {
+    right: 0em;
+    top: 0em;
+    min-width: 4em;
+    z-index: 100;
+}
+
+.w3-cell {
+    text-align: center;
+    /* padding-top: 0.8em; */
+}
+
+.actionfilter {
+    position: relative;
+    /* top: 1px; */
+    width: 14%;
+    float: right;
+    padding: 6px 0px 0px 0px;
+    height: 38px;
+}
+
+#getactionall {
+    text-align: center;
+    font-weight: bold;
+    padding: 1em;
+}
+
+.low-z-idx {
+    position: relative;
+    z-index: -10;
+}
+
+#funnel-svg {
+    width: 1.8em;
+    height: 2em;
+}
+
+.funnel-svg {
+    fill: white;
+}
+
+.contheader {
+    display: inline-block;
+    line-height: 1.1;
+    padding-left: 0.3em;
+    padding-right: 0.1em;
+}
+
+.subtitle {
+    font-size: 1.0em;
+    font-style: italic;
+    /* line-height: 1.1; */
+    padding-top: 0.3em;
+}
+
+.title {
+    height: 1.5em;
+    font-size: 1.8em;
+    /* line-height: 1.1; */
+    padding-top: 0.5em;
+}
+
+#verticalbar {
+    /*to swiperight*/
+    height: 100%;
+    width: 26px;
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 95px;
+}
+
+#logo {
+    background-image: url("../icon.png");
+    background-size: contain;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    right: 2rem;
+    top: 9.7rem;
+    display: block;
+}
+
+.xclose {
+    vertical-align: top;
+    padding: 10px;
+}
+
+.italic {
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+/* .footer {
+    padding-top: 0.3em;
+} */
+
+header {
+    position: fixed;
+    top: 0;
+    transition: top 0.2s ease-in-out;
+    width: 50%;
+}
+
+#footer {
+    position: fixed;
+    transition: bottom 0.2s ease-in-out;
+    width: 100%;
+}
+
+.footerdown {
+    bottom: -90px;
+}
+
+.footerup {
+    bottom: 0em;
+}
+
+.nav-up {
+    top: -8em;
+    /*same size as header*/
+}
+
+
+/*get searchfield-cancel-button in input box*/
+
+input[type=search]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+#myFilter {
+    width: 30px;
+    background-size: 30px 30px;
+    float:right;
+    box-sizing: border-box;
+    border: none;
+    /* margin-right:3.8em; */
+    margin-top: 0.5em;
+    border-radius: 4px;
+    font-size: 16px;
+    color: white;  
+    background-color: transparent;
+    background-image: url('../res/img/searchicon.png');
+    background-position: 10px 5px; 
+    background-repeat: no-repeat;
+    padding: 6px 12px 10px 45px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+.switchwindowsize {
+    float:right;
+    box-sizing: border-box;
+    border: none;
+    font-size: 12px;
+    color: white;  
+    background-color: transparent;
+    vertical-align: top;
+    padding: 10px;}
+
+#clearsearch {
+    float:right;
+    box-sizing: border-box;
+    border: none;
+    font-size: 26px;
+    color: white;  
+    background-color: transparent;
+    position: relative;
+    cursor: pointer;
+    margin-top: 0.2em;
+    margin-right: 0.2em;
+    margin-left: -1em;
+}
+
+/* input[type=text]:focus { */
+#myFilter:focus {
+    /* background-color: #8EDC9D; */
+    /* color: white; */
+    border-bottom-color: white;
+    /* border-color: white; */
+    border-bottom-style: solid;
+    /* border-style: solid; */
+    border-width: 2px;
+    /* width: 20em; */
+    width: 65%;
+    z-index: 1000
+}
+
+#activelist{
+    margin-top: -1px!important;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+table td {
+    word-wrap: break-word;
+    /* All browsers since IE 5.5+ */
+    overflow-wrap: break-word;
+    /* Renamed property in CSS3 draft spec */
+    /* padding: 4px 0px 4px 0px !important; */
+}
+
+.td-left {
+    padding: 4px 0px 4px 6px !important;
+}
+
+.td-right {
+    padding: 4px 8px 4px 0px !important;
+    text-align:right !important;
+    width:12%;
+    vertical-align: middle !important;
+}
+
+tr:active {
+    color: #fff;
+    background-color: #647687 !important
+}
+
+.scrollToTop {
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    color: #444;
+    position: absolute;
+    bottom: 4em;
+    display: none;
+    background: url('../res/img/arrowup01.png') no-repeat 0px 0px;
+    background-size: cover;
+    float: right;
+}
+
+#trashicon {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    float: right;
+    top: 4.5em;
+    right: 0em;
+    /* background: url('../res/img/arrowup01.png') no-repeat 0px 0px; */
+    background: url('../res/img/trashicon.png') no-repeat 0px 0px;
+    background-size: cover;
+}
+
+#duplicate {
+    position: absolute;
+    bottom: 15vh;
+    margin-left: 3vw;
+    width: 60px;
+    height: 60px;
+    background: url('../res/img/duplicate.png') no-repeat 0px 0px;
+    background-size: contain;
+}
+
+.back {
+    width: 30px;
+    height: 20px;
+    position: relative;
+    float: left;
+    top: 1em;
+    left: 1em;
+    /* background: url('../res/img/arrowup01.png') no-repeat 0px 0px; */
+    background: url('../res/img/back.png') no-repeat 0px 0px;
+    background-size: cover;
+}
+
+.rs-cube, .rs-bubble{
+    position: fixed !important;
+}
+
+.scrollToTop:hover {
+    text-decoration: none;
+}
+
+.secretcode{
+    font-size: 2em;
+    font-family: monospace;
+}
+
+#inputsecret{
+    border: 1px;
+}
+
+#alertmessage{
+    padding-top: 2em;
+    background: none;
+    /* padding-bottom: 2em; */
+}
+
+.w3-modal-content{
+    width: 50%;
+}
+
+.w3-modal-content span{
+    text-align: center;
+    white-space: nowrap;
+}
+
+.alert{
+    width: fit-content !important;
+}
+
+.row-home{
+    border-left-width: 6px;
+    border-color: teal;
+    border-left-style: solid;
+}
+
+.row-work{
+    border-left-width: 6px;
+    /* border-right-width: 6px; */
+    border-color: #C2B602;
+    border-left-style: solid;
+    /* border-right-style: solid; */
+}
+
+.row-other{
+    border-left-width: 6px;
+    /* border-right-width: 6px; */
+    border-color: #EE680F;
+    border-left-style: solid;
+    /* border-right-style: solid; */
+}
+
+#addnewplog {
+    position: fixed;
+    transition: bottom 0.2s ease-in-out;
+    left: 40%;
+    /* width: 100%;
+    padding:0px !important; */
+}
+  
+  .newplogdown {
+    bottom: -70px;
+  }
+  
+  .newplogup {
+    bottom: 2em;
+  }
+  
+  
+
+/*colors*/
+
+.basecolor {
+    color: #fff;
+    background-color: #218C8D
+}
+
+.persons {
+    color: #fff;
+    background-color: #EE680F !important;
+}
+
+.tags {
+    color: #fff;
+    background-color: #00999E;
+}
+
+.w3-round{
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 3px;
+}
+
+tag {
+    color: #fff;
+    background-color: #00999E;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 3px;
+}
+
+person {
+    color: #fff;
+    background-color: rgb(72, 109, 212);
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 3px;
+}
+
+.personsmenu {
+    border-bottom-color: rgb(72, 109, 212);
+}
+
+.tagsmenu {
+    border-bottom-color: #00999E;    
+}
+
+.scopehomemenu {
+    border-bottom-color: #00999E;    
+}
+
+.scopeworkmenu {
+    border-bottom-color: #C2B602;    
+}
+
+.scopeothermenu {
+    border-bottom-color: #EE680F;    
+}
+
+.dueredmenu {
+    border-bottom-color: red;    
+}
+
+.dueyellowmenu {
+    border-bottom-color: yellow;    
+}
+
+.duegreenmenu {
+    border-bottom-color: green;    
+}
+
+.fs-light-blue {
+    color: #fff;
+    background-color: #6CCECB !important;
+}
+
+.fs-yellow {
+    color: #222;
+    /* background-color: #F9E559; */
+    background-color: yellow;
+}
+
+.fs-green {
+    color: #fff;
+    background-color: green !important;
+}
+
+.fs-orange {
+    color: #fff;
+    background-color: #EF7126 !important;
+}
+
+.fs-red {
+    color: #fff;
+    background-color: red !important;
+}
+
+.fs-light-green {
+    color: #fff;
+    background-color: #8EDC9D !important;
+}
+
+.fs-gray {
+    color: #fff;
+    background-color: #aaa !important;
+}
+
+.fs-dark-gray {
+    color: #fff;
+    background-color: #616161 !important;
+}
+
+.fs-black {
+    color: #fff;
+    background-color: #000
+}
+
+.fs-steel {
+    color: #fff;
+    background-color: #647687
+}

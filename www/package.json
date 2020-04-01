@@ -1,0 +1,23 @@
+{
+    "name": "plogs",
+    "version": "0.0.1",
+    "description": "A personal log for notes, todos and more",
+    "icons": {
+        "512": "icon.png"
+    },
+    "main": "index.html",
+    "window": {
+        "frame": true,
+        "toolbar": false,
+        "resizable": true,
+        "icon":"icon.png",
+        "width": 480,
+        "height": 600,
+        "show": false
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Frans Schrijver",
+    "license": "GPL"
+}
