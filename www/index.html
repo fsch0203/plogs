@@ -10,7 +10,7 @@
     <link href="css/alerty.min.css" rel="stylesheet" type="text/css" />
     <link href="css/datepicker.min.css" rel="stylesheet" type="text/css" />
     <script src="js/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="cordova.js"></script>
+    <!-- <script type="text/javascript" src="cordova.js"></script> -->
     <script src="js/taffy-min.js"></script>
     <script src="js/datepicker.min.js"></script>
     <script src="js/datepicker.nl-NL.js"></script>
@@ -19,9 +19,9 @@
     <script src="js/translate.js"></script>
     <script src="js/alerty.min.js"></script>
     <!-- Start only if there is internet connection -->
-    <script src="https://apis.google.com/js/api.js"></script>
+    <!-- <script src="https://apis.google.com/js/api.js"></script> -->
     <script src="js/drive.service.js"></script>
-    <script src="js/login.service.js"></script>
+    <!-- <script src="js/login.service.js"></script> -->
     <script src="js/plogs.js"></script>
     <!-- <script src="js/plogs-pg.js"></script> -->
 </head>
@@ -171,6 +171,7 @@
         <a href="#" class="w3-bar-item w3-button" id="godownloadbox">Download (menu)</a>
         <a href="#" class="w3-bar-item w3-button" id="goremovebox">Remove (menu)</a>
         <a href="#" class="w3-bar-item w3-button" id="gologinbox">Login Google</a>
+        <a href="#" class="w3-bar-item w3-button" id="gotestbox">Do test</a>
         <a href="#" class="w3-bar-item w3-button" id="showtrash">Show trash</a>
         <a href="#" class="w3-bar-item w3-button" id="gosync">Sync</a>
         <a href="#" class="w3-bar-item w3-button" id="reloadapp">Reload app</a>
@@ -505,7 +506,10 @@
             </footer>
         </div>
     </div>
-    <!-- <script src="https://apis.google.com/js/api.js?onload=initGapi"></script> -->
+    <script async defer src="https://apis.google.com/js/api.js" 
+        onload="this.onload=function(){};handleClientLoad()" 
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
 </body>
 
 </html>

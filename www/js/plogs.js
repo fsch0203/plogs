@@ -29,77 +29,139 @@ _locale = (_locale) ? _locale : "en-US";
 _locale = 'nl-NL'; // #### to be deleted
 setLanguage();
 
-
-// Google Drive interaction --------------------------------------------------------------------------
-//SCOPES: scopes to request, as a space-delimited string. 
-//CLIENT_ID: The app's client ID, found and created in the Google Developers Console.
-//DISCOVERY_DOCS: are the apis that we are going to use. An array of discovery doc URLs or discovery doc JSON objects.
-var SCOPES = 'https://www.googleapis.com/auth/drive.file';
+/******************** GLOBAL VARIABLES ********************/
+// var SCOPES = ['https://www.googleapis.com/auth/drive','profile']; // whole drive
+var SCOPES = ['https://www.googleapis.com/auth/drive.file','profile']; // Just one file
+// var SCOPES = ['https://www.googleapis.com/auth/drive.appdata','profile']; // Just one file
 var CLIENT_ID = '947617816205-mjefkgnmnqn46vs9qhs174p5ctjstoig.apps.googleusercontent.com';
-var DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
-var API_KEY = 'AIzaSyCiyfyWCbXt5cd5ujXhNOmdCPOQoS13yUE';
+// var API_KEY = 'AIzaSyCiyfyWCbXt5cd5ujXhNOmdCPOQoS13yUE'; // API-key not needed for access
+var API_KEY = '';
+var FOLDER_NAME = "";
+var FOLDER_ID = "root";
+var FOLDER_PERMISSION = true;
+var FOLDER_LEVEL = 0;
+var NO_OF_FILES = 1000;
+var DRIVE_FILES = [];
+var FILE_COUNTER = 0;
+var FOLDER_ARRAY = [];
+
+/******************** AUTHENTICATION ********************/
+
+ function handleClientLoad() {
+    // Load the API client and auth2 library
+    console.log('handleclientload');
+	gapi.load('client:auth2', initClient);
+}
+
+//authorize apps
+ function initClient() {
+	gapi.client.init({
+		//apiKey: API_KEY, //THIS IS OPTIONAL AND WE DONT ACTUALLY NEED THIS, BUT I INCLUDE THIS AS EXAMPLE
+		clientId: CLIENT_ID,
+		scope: SCOPES.join(' ')
+	}).then(function () {
+	  // Listen for sign-in state changes.
+	  gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+	  // Handle the initial sign-in state.
+	  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+	});
+}
+
+//check the return authentication of the login is successful, we display the drive box and hide the login box.
+function updateSigninStatus(isSignedIn) {
+	if (isSignedIn) {
+        console.log('signin successful');
+        getDriveFiles();
+	} else {
+        showLoginBox();
+	}
+}
+
+function handleAuthClick(event) {
+	gapi.auth2.getAuthInstance().signIn();
+}
+
+function handleSignoutClick(event) {
+	if(confirm("Are you sure you want to logout?")){
+		gapi.auth2.getAuthInstance().signOut();
+	}
+}
+
+/******************** END AUTHENTICATION ********************/
+
 var _bm_filename = 'plogs.json';
 var _bm_fileid = '';
 
-window.loginService = new LoginService(CLIENT_ID, SCOPES, DISCOVERY_DOCS);
+function doTest() {
+    // saveplogstoGD('appDataFolder');
+    getFiles();
+}
+
+function getDriveFiles(){
+    gapi.client.load('drive', 'v2', getFiles);
+}
+
+function getFiles(){
+    var query = "";
+    // FOLDER_ID = 'appDataFolder';
+    // query = "trashed=false and '" + FOLDER_ID + "' in parents and name contains '" + _bm_filename + "'" ;
+    query = "trashed=false and '" + FOLDER_ID + "' in parents and fullText contains '" + _bm_filename + "'" ;
+    console.log('query: '+query);
+    console.log('query: '+query);
+    var request = gapi.client.drive.files.list({
+        'maxResults': NO_OF_FILES,
+        'q': query
+    });
+    request.execute(function (resp) {
+       if (!resp.error) {
+            DRIVE_FILES = resp.items;
+            // console.log('Drive_files: '+JSON.stringify(DRIVE_FILES));
+            console.log('Drive_files: '+ DRIVE_FILES[0].title);
+            console.log('Drive_files: '+ DRIVE_FILES[0].id);
+            syncWithGD(DRIVE_FILES[0].id);
+       }else{
+            console.log("Error: " + resp.error.message);
+       }
+    });
+}
+
+// window.loginService = new LoginService(CLIENT_ID, SCOPES, DISCOVERY_DOCS);
 window.driveService = new DriveService();
 
-function initGapi() { //starts after google's api.js is loaded
-    gapi.load('client:auth2', initClient);
-}
-
-//Try to automactically signin
-function initClient() {
-    //We pass a callback function to initClient, that return true/false if user is signin/signoff
-    window.loginService.initClient(updateSigninStatus)
-}
-
-function updateSigninStatus(isSignedIn) { //is called after user is logged in
-    if (isSignedIn) {
-        // var useremail = window.loginService.userProfile().getEmail();
-        // is_auth(useremail)
-        // syncWithGD();
-    } else {
-        not_auth();
-    }
-}
-
-function syncWithGD() {
-    getFileId(_bm_filename, function (fileid) { //get fileid from GD, then
-        console.log('sync fileid: ' + fileid);
-        if (fileid.length > 10) { // there is a previous version on GD
-            getMetaData(fileid, function(modifiedTime){
-                console.log('modifiedTime: '+modifiedTime);
-                _bm_fileid = fileid;
-                getFileContent(fileid, function (filecontent) { // get json from GD
-                    var plogsLS = JSON.parse(localStorage.getItem('data'));
-                    var recentPlogsLS = $.grep(plogsLS, (function (record, i) {
-                        return record.moddate > modifiedTime;
-                    }));
-                    recentPlogsLS = recentPlogsLS.map(({ // filter out unneccesary fields
-                            _id, title, text, scope, due, moddate, action, status 
-                        }) => ({ 
-                            _id, title, text, scope, due, moddate, action, status }));
-                    // console.log('recentplogs' + JSON.stringify(recentplogs));
-                    filecontent = removeBom(filecontent); // utf8 without BOM
-                    var plogsGD = JSON.parse(filecontent);
-                    // console.log('json'+json);
-                    
-                    recentPlogsLS.forEach((v,i) => {
-                        objIndex = plogsGD.findIndex((obj => obj._id == v._id)); // finds index of existing record
-                        if (objIndex > -1) {
-                            plogsGD[objIndex] = v; // update with recent change
-                        } else {
-                            plogsGD.push(v); // add new plog
-                        }
-                    });
-                    localStorage.setItem('data', JSON.stringify(plogsGD)); // save to LS
-                    saveplogstoGD();
-                    showPlogs();
+function syncWithGD(fileid) {
+    if (fileid.length > 10) { // there is a previous version on GD
+        getMetaData(fileid, function(modifiedTime){
+            console.log('modifiedTime: '+modifiedTime);
+            _bm_fileid = fileid;
+            getFileContent(fileid, function (filecontent) { // get json from GD
+                var plogsLS = JSON.parse(localStorage.getItem('data'));
+                var recentPlogsLS = $.grep(plogsLS, (function (record, i) {
+                    return record.moddate > modifiedTime;
+                }));
+                recentPlogsLS = recentPlogsLS.map(({ // filter out unneccesary fields
+                        _id, title, text, scope, due, moddate, action, status 
+                    }) => ({ 
+                        _id, title, text, scope, due, moddate, action, status }));
+                // console.log('recentplogs' + JSON.stringify(recentplogs));
+                filecontent = removeBom(filecontent); // utf8 without BOM
+                var plogsGD = JSON.parse(filecontent);
+                // console.log('json'+json);
+                
+                recentPlogsLS.forEach((v,i) => {
+                    objIndex = plogsGD.findIndex((obj => obj._id == v._id)); // finds index of existing record
+                    if (objIndex > -1) {
+                        plogsGD[objIndex] = v; // update with recent change
+                    } else {
+                        plogsGD.push(v); // add new plog
+                    }
                 });
+                localStorage.setItem('data', JSON.stringify(plogsGD)); // save to LS
+                // var parent = 'appDataFolder';
+                saveplogstoGD(parent);
+                showPlogs();
             });
-        }
-    });
+        });
+    }
 }
 
 function removeBom(string) {
@@ -111,23 +173,6 @@ function removeBom(string) {
     }
     return string;
 };
-
-function signIn() {
-    window.loginService.signIn();
-}
-
-function signOut() {
-    window.loginService.signOut();
-}
-
-function is_auth(useremail) {
-    console.log('is_auth');
-}
-
-function not_auth() {
-    console.log('not_auth'); // ask user to signin
-}
-
 
 window.current_file = {
     content: '',
@@ -141,20 +186,16 @@ function saveplogstoLS() {
     localStorage.setItem('data', JSON.stringify(plogs));
 }
 
-function saveplogstoGD() {
+function saveplogstoGD(parent) {
     var plogs = JSON.parse(localStorage.getItem('data'));
     plogs = plogs.map(({ _id, title, text, scope, due, moddate, action, status }) => ({ _id, title, text, scope, due, moddate, action, status }));
-
-    // console.log('plogs: '+JSON.stringify(plogs));
-
-    // var plogs = plogsdb().order("status desc, _id desc").get();
-    // console.log('plogs: '+JSON.stringify(plogs));
     window.current_file = {
         content: plogs,
         id: _bm_fileid,
         name: _bm_filename,
-        parents: []
+        parents: [parent]
     };
+    // console.log('parent:'+window.current_file.parents);
     driveService.saveFile(window.current_file, function (file) {
         _bm_fileid = file.id;
     });
@@ -170,33 +211,10 @@ function getFileContent(fileid, fn) {
             name: _bm_filename,
             parents: []
         };
-        
-        // let file = window.current_file
-        // file = {
-        //     id: fileid
-        // }
         window.driveService.loadFile(file, function (file) {
             fn(file.content);
         });
     }
-}
-
-function getFileId(filename, fn) {
-    console.log('getFileId filename: ' + filename);
-    window.driveService.listFiles(filename, function (err, files) {
-        if (err) {
-            console.log('List error:' + err);
-            return
-        }
-        if (Object.keys(files).length === 0) {
-            _bm_fileid = '';
-            fn('');
-        } else {
-            _bm_fileid = files[0].id;
-            // console.log('_bm_fileid: '+files[0].id);
-            fn(files[0].id);
-        }
-    });
 }
 
 function getMetaData(fileId, fn) {
@@ -223,30 +241,15 @@ function getMetaData(fileId, fn) {
 
 // End Google Drive interaction ---------------------------------------------------------
 
-
-
-
-
-
 function getdata() { //get json with plogs from local storage; called after document is ready
     $.getJSON('./res/files/plogs.json', function (records) {
         var startData = JSON.stringify(records);
         // console.log('startData: '+startData);
         var json = localStorage.getItem("data");
         json = (json) ? json : startData;
-        // json = startData;
-        // plogsdb().remove();
-        // plogsdb.insert(json);
         localStorage.setItem('data', json);
-
         showPlogs();
     });
-
-    // var json = localStorage.getItem("data");
-    // json = (json) ? json : startData;
-    // plogsdb().remove();
-    // plogsdb.insert(json);
-    // showPlogs();
 }
 
 function unique(array) { //returns sorted distinct elements
@@ -1751,7 +1754,8 @@ $(document).ready(function () {
             removeplogs(checks);
             $("#messagebox").hide();
         } else if (boxtype === 'loginbox_') {
-            signIn();
+            // signIn();
+            handleAuthClick();
             $("#messagebox").hide();
         } else if (boxtype === 'settings_') { //get user input for new scopenames
             var scopenames = {
@@ -1856,7 +1860,8 @@ $(document).ready(function () {
         showmessagebox(hd, msg, list);
     });
     $("#gosync").on('click', function () {
-        syncWithGD();
+        // syncWithGD();
+        getFiles();
         w3_close();
     });
     $("#goremovebox").on('click', function () {
@@ -1879,22 +1884,11 @@ $(document).ready(function () {
     });
     $("#gologinbox").on('click', function () {
         w3_close();
-        $("#favicon").removeClass("favicon2");
-        var hd = 'Login to Google Drive';
-        var msg = "<p>" + 'Login to Google to get access to Google Drive' + "</p>";
-        var boxtype = 'loginbox_';
-        $("#btn-messageboxleft").html(_lg.OK);
-        $("#btn-messageboxright").html(_lg.Cancel);
-        var list = '<span style="display:none">' + boxtype + '</span>';
-        // var list = '<span style="display:none">' + boxtype + '</span>' +
-        //     '<p><input id="check1" class="w3-check" type="checkbox">' +
-        //     '<label class="lbcheck">' + _lg.openplogs + '</label></p>' +
-        //     '<p><input id="check2" class="w3-check" type="checkbox">' +
-        //     '<label class="lbcheck">' + _lg.doneplogs + '</label></p>' +
-        //     '<p><input id="check3" class="w3-check" type="checkbox" checked="checked">' +
-        //     '<label class="lbcheck">' + _lg.trashplogs + '</label></p>';
-        $("#logo").show();
-        showmessagebox(hd, msg, list);
+        showLoginBox();
+    });
+    $("#gotestbox").on('click', function () {
+        w3_close();
+        doTest();
     });
     $("#logo").on('click', function () {
         window.location.href = 'https://radios2s.scriptel.nl';
@@ -1931,6 +1925,25 @@ $(document).ready(function () {
         Select();
     });
 });
+
+function showLoginBox() {
+    $("#favicon").removeClass("favicon2");
+    var hd = 'Login to Google Drive';
+    var msg = "<p>" + 'Login to Google to get access to Google Drive' + "</p>";
+    var boxtype = 'loginbox_';
+    $("#btn-messageboxleft").html(_lg.OK);
+    $("#btn-messageboxright").html(_lg.Cancel);
+    var list = '<span style="display:none">' + boxtype + '</span>';
+    // var list = '<span style="display:none">' + boxtype + '</span>' +
+    //     '<p><input id="check1" class="w3-check" type="checkbox">' +
+    //     '<label class="lbcheck">' + _lg.openplogs + '</label></p>' +
+    //     '<p><input id="check2" class="w3-check" type="checkbox">' +
+    //     '<label class="lbcheck">' + _lg.doneplogs + '</label></p>' +
+    //     '<p><input id="check3" class="w3-check" type="checkbox" checked="checked">' +
+    //     '<label class="lbcheck">' + _lg.trashplogs + '</label></p>';
+    $("#logo").show();
+    showmessagebox(hd, msg, list);
+}
 
 function detectLanguage() {
     if (navigator.globalization !== null && navigator.globalization !== undefined) { //Phonegap browser detection
